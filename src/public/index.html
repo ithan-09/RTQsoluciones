@@ -285,15 +285,6 @@
           document.getElementById('form-orden').reset();
           const botonActivo = document.querySelector('.btn-filtro.activo');
           filtrarEstado(filtroActual, botonActivo);
-          
-          alert('¡Orden y cliente guardados correctamente en la base de datos!');
-        } else {
-          alert('Error al guardar la orden.');
-        }
-      } catch (error) {
-        console.error('Error de conexión:', error);
-        alert('No se pudo conectar con el servidor.');
-      }
     }
 
     function cambiarEstado(boton) {
