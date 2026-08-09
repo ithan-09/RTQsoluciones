@@ -19,7 +19,7 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 950px;
       margin: 0 auto;
       background: #ffffff;
       padding: 25px;
@@ -166,8 +166,12 @@
             <input type="text" id="cliente" required placeholder="Ej: Juan Pérez">
           </div>
           <div class="form-group">
-            <label for="equipo">Equipo / Reparación</label>
-            <input type="text" id="equipo" required placeholder="Ej: Cambio de Pantalla">
+            <label for="telefono">Número de Teléfono</label>
+            <input type="tel" id="telefono" required placeholder="Ej: 987654321">
+          </div>
+          <div class="form-group">
+            <label for="equipo">Reparación / Detalles</label>
+            <input type="text" id="equipo" required placeholder="Ej: Cambio de Pantalla Samsung A52">
           </div>
           <div class="form-group">
             <label for="estado">Estado Inicial</label>
@@ -194,7 +198,8 @@
         <tr>
           <th># Orden</th>
           <th>Cliente</th>
-          <th>Equipo / Reparación</th>
+          <th>Teléfono</th>
+          <th>Reparación</th>
           <th>Estado</th>
         </tr>
       </thead>
@@ -202,12 +207,14 @@
         <tr class="fila-orden" data-estado="en proceso">
           <td>#001</td>
           <td>Juan Pérez</td>
+          <td>987654321</td>
           <td>Cambio de pantalla Samsung A52</td>
           <td><span class="badge badge-proceso">En proceso</span></td>
         </tr>
         <tr class="fila-orden" data-estado="entregado">
           <td>#002</td>
           <td>María López</td>
+          <td>912345678</td>
           <td>Reparación pin de carga iPhone 11</td>
           <td><span class="badge badge-entregado">Entregado</span></td>
         </tr>
@@ -219,11 +226,11 @@
     let contadorOrden = 3;
     let filtroActual = 'todos';
 
-    // Función para agregar una nueva orden desde el formulario
     function agregarOrden(event) {
       event.preventDefault();
 
       const cliente = document.getElementById('cliente').value;
+      const telefono = document.getElementById('telefono').value;
       const equipo = document.getElementById('equipo').value;
       const estado = document.getElementById('estado').value;
 
@@ -240,21 +247,21 @@
       nuevaFila.innerHTML = `
         <td>${numOrden}</td>
         <td>${cliente}</td>
+        <td>${telefono}</td>
         <td>${equipo}</td>
         <td><span class="badge ${badgeClase}">${estadoTexto}</span></td>
       `;
 
       tabla.appendChild(nuevaFila);
 
-      // Limpiar formulario
+      // Limpiar el formulario
       document.getElementById('form-orden').reset();
 
-      // Aplicar el filtro activo a la lista actualizada
+      // Mantener el filtro seleccionado actualmente
       const botonActivo = document.querySelector('.btn-filtro.activo');
       filtrarEstado(filtroActual, botonActivo);
     }
 
-    // Función para filtrar por estado
     function filtrarEstado(estado, botonSeleccionado) {
       filtroActual = estado;
 
