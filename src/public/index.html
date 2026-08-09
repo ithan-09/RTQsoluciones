@@ -770,15 +770,18 @@
             return;
           }
 
-          // Renderizar cada producto en una fila vertical con imagen y detalles
+          // Renderizar cada producto en una fila vertical con imagen, detalles y botón eliminar
           productos.forEach(prod => {
             contenedor.innerHTML += `
-              <div style="display: flex; align-items: center; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white; gap: 20px;">
-                <img src="${prod.url_imagen}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; border: 1px solid #ccc; cursor: pointer;" onclick="abrirImagenGrande('${prod.url_imagen}')" title="Haz clic para ampliar">
-                <div>
-                  <h4 style="margin: 0 0 5px 0; font-size: 18px;">${prod.nombre_repue}</h4>
-                  <p style="color: #28a745; font-weight: bold; margin: 0; font-size: 16px;">Precio: S/ ${prod.precio_venta}</p>
+              <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 15px; border: 1px solid #ddd; border-radius: 8px; gap: 20px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                  <img src="${prod.url_imagen}" style="width: 90px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #ccc;" onclick="abrirImagenGrande('${prod.url_imagen}')" title="Haz clic para ampliar">
+                  <div>
+                    <h4 style="margin: 0 0 5px 0; font-size: 18px;">${prod.nombre}</h4>
+                    <p style="color: #28a745; font-weight: bold; margin: 0; font-size: 16px;">Precio: S/ ${prod.precio}</p>
+                  </div>
                 </div>
+                <button onclick="eliminarProducto(${prod.id})" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer;">Eliminar</button>
               </div>
             `;
           });
@@ -792,6 +795,22 @@
     }
 
     cargarProductosHaciaAbajo();
+
+    async function eliminarProducto(id) {
+      if (!confirm('¿Estás seguro de eliminar este producto?')) return;
+
+      try {
+        const res = await fetch(`/api/productos/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          cargarProductosHaciaAbajo();
+        } else {
+          alert('No se pudo eliminar el producto');
+        }
+      } catch (error) {
+        console.error('Error de red al eliminar', error);
+        alert('Error de red al eliminar el producto');
+      }
+    }
 
     document.getElementById('form-producto')?.addEventListener('submit', async (e) => {
       e.preventDefault();

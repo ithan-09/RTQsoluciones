@@ -135,10 +135,19 @@ app.post('/api/citas', async (req, res) => {
   }
 });
 
-// Ruta para subir productos — acepta imagen en Base64 en `url_imagen`
+// Obtener productos
+app.get('/api/productos', async (req, res) => {
+  try {
+    const resultado = await pool.query('SELECT * FROM inventario ORDER BY id DESC');
+    res.json(resultado.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Guardar producto
 app.post('/api/productos', async (req, res) => {
   const { nombre, precio, url_imagen } = req.body;
-
   try {
     const resultado = await pool.query(
       'INSERT INTO inventario (nombre, precio, url_imagen) VALUES ($1, $2, $3) RETURNING *',
@@ -146,22 +155,16 @@ app.post('/api/productos', async (req, res) => {
     );
     res.json({ success: true, producto: resultado.rows[0] });
   } catch (err) {
-    console.error('Error al guardar:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Obtener productos disponibles para clientes
-app.get('/api/productos', async (req, res) => {
+// Eliminar producto
+app.delete('/api/productos/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const resultado = await pool.query('SELECT * FROM inventario ORDER BY id DESC');
-    // Mapeamos para que el frontend los lea fácilmente sin cambiar tu HTML
-    const productosMapeados = resultado.rows.map(p => ({
-      ...p,
-      nombre: p.nombre_repue,
-      precio: p.precio_venta
-    }));
-    res.json(productosMapeados);
+    await pool.query('DELETE FROM inventario WHERE id = $1', [id]);
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
