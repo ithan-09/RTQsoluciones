@@ -135,24 +135,23 @@ app.post('/api/citas', async (req, res) => {
   }
 });
 
-// Ruta para subir productos con imagen
-app.post('/api/productos', upload.single('imagen'), async (req, res) => {
-  const { nombre, precio } = req.body;
-  const url_imagen = req.file ? req.file.path : null;
+// Ruta para subir productos — acepta imagen en Base64 en `url_imagen`
+app.post('/api/productos', async (req, res) => {
+  const { nombre, precio, url_imagen } = req.body;
 
   if (!nombre || !precio || !url_imagen) {
-    return res.status(400).json({ error: 'Nombre, precio e imagen son obligatorios.' });
+    return res.status(400).json({ error: 'Nombre, precio y url_imagen son obligatorios.' });
   }
 
   try {
-    const nuevoProducto = await pool.query(
+    const resultado = await pool.query(
       'INSERT INTO inventario (nombre, precio, url_imagen) VALUES ($1, $2, $3) RETURNING *',
       [nombre, precio, url_imagen]
     );
-    res.json(nuevoProducto.rows[0]);
+    res.json({ success: true, producto: resultado.rows[0] });
   } catch (err) {
-    console.error('Error al guardar el producto:', err);
-    res.status(500).send('Error al guardar el producto');
+    console.error('Error al insertar producto:', err);
+    res.status(500).json({ error: 'Error al guardar el producto' });
   }
 });
 

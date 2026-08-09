@@ -791,31 +791,47 @@
 
     cargarCatalogoClientes();
 
-    document.getElementById('form-producto').onsubmit = async (e) => {
+    document.getElementById('form-producto').onsubmit = function (e) {
       e.preventDefault();
 
-      const formData = new FormData();
-      formData.append('nombre', document.getElementById('nombre-producto').value);
-      formData.append('precio', document.getElementById('precio-producto').value);
-      formData.append('imagen', document.getElementById('imagen-producto').files[0]);
+      const nombre = document.getElementById('nombre-producto').value;
+      const precio = document.getElementById('precio-producto').value;
+      const archivoInput = document.getElementById('imagen-producto').files[0];
 
-      try {
-        const res = await fetch('/api/productos', {
-          method: 'POST',
-          body: formData
-        });
-
-        if (res.ok) {
-          alert('¡Producto subido con éxito!');
-          document.getElementById('form-producto').reset();
-        } else {
-          const error = await res.text();
-          alert('Error al subir producto: ' + error);
-        }
-      } catch (error) {
-        console.error('Error al subir el producto:', error);
-        alert('Error de conexión al subir el producto.');
+      if (!archivoInput) {
+        alert('Por favor selecciona una imagen');
+        return;
       }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(archivoInput);
+
+      reader.onload = async function () {
+        const url_imagen = reader.result;
+
+        try {
+          const respuesta = await fetch('/api/productos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, precio, url_imagen })
+          });
+
+          const data = await respuesta.json();
+
+          if (respuesta.ok) {
+            document.getElementById('form-producto').reset();
+            if (typeof cargarCatalogoClientes === 'function') cargarCatalogoClientes();
+          } else {
+            alert('Error al subir producto: ' + (data.error || 'Error desconocido'));
+          }
+        } catch (error) {
+          alert('Error de conexión al guardar el producto');
+        }
+      };
+
+      reader.onerror = function () {
+        alert('No se pudo leer el archivo. Intenta con otra imagen.');
+      };
     };
 
     async function agregarOrden(event) {
