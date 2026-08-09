@@ -466,8 +466,8 @@
         </form>
       </div>
 
-      <div id="catalogo-clientes" style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
-        <!-- Se llenará automáticamente con JavaScript -->
+      <div id="catalogo-clientes" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+        <!-- Aquí aparecerán los productos en columna (uno debajo de otro) -->
       </div>
 
       <h3>Nuestros Servicios Especializados (Duración: 2 Horas)</h3>
@@ -772,12 +772,15 @@
             return;
           }
 
+          // Renderizar cada producto en una fila vertical con imagen y detalles
           productos.forEach(prod => {
             contenedor.innerHTML += `
-              <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; width: 220px; background: white;">
-                <img src="${prod.url_imagen}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
-                <h4 style="margin: 10px 0 5px 0;">${prod.nombre}</h4>
-                <p style="color: #28a745; font-weight: bold; margin: 0;">Precio: S/ ${prod.precio}</p>
+              <div style="display: flex; align-items: center; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white; gap: 20px;">
+                <img src="${prod.url_imagen}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; border: 1px solid #ccc; cursor: pointer;" onclick="abrirImagenGrande('${prod.url_imagen}')" title="Haz clic para ampliar">
+                <div>
+                  <h4 style="margin: 0 0 5px 0; font-size: 18px;">${prod.nombre}</h4>
+                  <p style="color: #28a745; font-weight: bold; margin: 0; font-size: 16px;">Precio: S/ ${prod.precio}</p>
+                </div>
               </div>
             `;
           });
@@ -785,6 +788,7 @@
           contenedor.innerHTML = '<p style="color: red;">Error al cargar el catálogo.</p>';
         }
       } catch (error) {
+        console.error('Error al cargar catálogo:', error);
         contenedor.innerHTML = '<p style="color: red;">Error al cargar el catálogo.</p>';
       }
     }
