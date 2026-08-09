@@ -150,7 +150,7 @@ app.post('/api/productos', async (req, res) => {
     );
     res.json({ success: true, producto: resultado.rows[0] });
   } catch (err) {
-    console.error('Error detallado al guardar:', err);
+    console.error('Error al guardar el producto:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -161,8 +161,8 @@ app.get('/api/productos', async (req, res) => {
     const resultado = await pool.query('SELECT * FROM inventario ORDER BY id DESC');
     res.json(resultado.rows);
   } catch (err) {
-    console.error('Error al obtener el inventario:', err);
-    res.status(500).json({ error: 'Error al obtener el inventario' });
+    console.error('Error al obtener productos:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
