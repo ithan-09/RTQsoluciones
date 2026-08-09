@@ -448,20 +448,18 @@
       </div>
 
       <div class="subida-imagen-container" style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-        <h3>Subir Imagen de Producto / Repuesto</h3>
-        <form id="form-producto" enctype="multipart/form-data">
-          <div class="form-group" style="margin-bottom: 10px;">
-            <label>Nombre del Producto:</label><br>
-            <input type="text" id="nombre-producto" required style="width: 100%; padding: 8px;">
-          </div>
-          <div class="form-group" style="margin-bottom: 10px;">
-            <label>Precio (S/):</label><br>
-            <input type="number" step="0.01" id="precio-producto" required style="width: 100%; padding: 8px;">
-          </div>
-          <div class="form-group" style="margin-bottom: 10px;">
-            <label>Imagen:</label><br>
-            <input type="file" id="imagen-producto" accept="image/*" required>
-          </div>
+        <form id="form-producto">
+          <h3>Subir Imagen de Producto / Repuesto</h3>
+
+          <label>Nombre del Producto:</label><br>
+          <input type="text" id="nombre-producto" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
+
+          <label>Precio (S/):</label><br>
+          <input type="number" step="0.01" id="precio-producto" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
+
+          <label>Imagen:</label><br>
+          <input type="file" id="imagen-producto" accept="image/*" required style="margin-bottom: 10px;">
+
           <button type="submit" id="btn-subir-producto" style="background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Subir Fotos</button>
         </form>
       </div>
