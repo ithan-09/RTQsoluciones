@@ -822,7 +822,9 @@
             document.getElementById('form-producto').reset();
             if (typeof cargarCatalogoClientes === 'function') cargarCatalogoClientes();
           } else {
-            alert('Error al subir producto: ' + (data.error || 'Error desconocido'));
+            console.error('Error al subir producto:', data.error || 'Error desconocido');
+            // Opcional: mostrar un mensaje amigable en la UI en vez de un alert
+            // document.getElementById('error-producto').innerText = 'Hubo un error al guardar el producto.';
           }
         } catch (error) {
           alert('Error de conexión al guardar el producto');
