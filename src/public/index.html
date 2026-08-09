@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaaS Taller de Reparaciones</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --focus-ring: rgba(37, 99, 235, 0.2);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: var(--text-main);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .contenedor-principal {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* BARRA DE NAVEGACIÓN (BOTONES DE PESTAÑAS) */
+    .menu-navegacion {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .btn-tab {
+      background: none;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-tab:hover {
+      background-color: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    .btn-tab.activo {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    /* CONTROL DE VISTAS */
+    .seccion-vista {
+      display: none;
+    }
+
+    .seccion-vista.activa {
+      display: block;
+    }
+
+    /* CARD FORMULARIO */
+    .card-formulario {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+    }
+
+    .header-formulario {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .header-formulario h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .header-formulario p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .grupo-seccion {
+      margin-bottom: 24px;
+    }
+
+    .titulo-seccion {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .campo-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .campo-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      background-color: #f8fafc;
+      transition: all 0.2s ease-in-out;
+      box-sizing: border-box;
+    }
+
+    .input-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px var(--focus-ring);
+    }
+
+    textarea.input-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background-color: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .alerta-exito {
+      display: none;
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 16px;
+    }
+
+    /* SECCIÓN TABLA DE ÓRDENES */
+    .cabecera-tabla {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .cabecera-tabla h2 {
+      margin: 0;
+      color: var(--text-main);
+      font-size: 1.3rem;
+    }
+
+    .btn-recargar {
+      background-color: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #475569;
+      transition: all 0.2s;
+    }
+
+    .btn-recargar:hover {
+      background-color: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    .tabla-contenedor {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .tabla-ordenes {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    .tabla-ordenes th {
+      background-color: #f8fafc;
+      color: #64748b;
+      font-weight: 600;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .tabla-ordenes td {
+      padding: 14px 18px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+    }
+
+    .tabla-ordenes tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .id-orden {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .badge-estado {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: #dcfce7;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+
+<div class="contenedor-principal">
+  <!-- MENÚ DE NAVEGACIÓN -->
+  <div class="menu-navegacion">
+    <button class="btn-tab activo" onclick="cambiarVista('registro')">📝 Nueva Orden</button>
+    <button class="btn-tab" onclick="cambiarVista('ordenes')">📋 Ver Órdenes Guardadas</button>
+  </div>
+
+  <!-- VISTA 1: FORMULARIO DE REGISTRO -->
+  <div id="vista-registro" class="seccion-vista activa">
+    <div class="card-formulario">
+      <div class="header-formulario">
+        <h1>🛠️ Registro de Orden de Reparación</h1>
+        <p>Ingresa los datos del cliente y la falla del equipo para generar un nuevo ingreso.</p>
+      </div>
+
+      <form id="form-orden">
+        <div class="grupo-seccion">
+          <div class="titulo-seccion">👤 Datos del Cliente</div>
+          <div class="grid-2">
+            <div class="campo-group">
+              <label for="nombre">Nombre Completo</label>
+              <input type="text" id="nombre" class="input-control" placeholder="Ej: Juan Pérez" required>
+            </div>
+            <div class="campo-group">
+              <label for="telefono">Teléfono (WhatsApp)</label>
+              <input type="text" id="telefono" class="input-control" placeholder="Ej: 987654321" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="grupo-seccion">
+          <div class="titulo-seccion">📱 Datos del Equipo</div>
+          <div class="grid-2">
+            <div class="campo-group">
+              <label for="modelo">Marca y Modelo</label>
+              <input type="text" id="modelo" class="input-control" placeholder="Ej: Samsung Galaxy A32" required>
+            </div>
+            <div class="campo-group">
+              <label for="imei">IMEI (15 dígitos)</label>
+              <input type="text" id="imei" class="input-control" placeholder="862345091234567">
+            </div>
+          </div>
+
+          <div class="campo-group">
+            <label for="clave">Patrón / Clave de Desbloqueo</label>
+            <input type="text" id="clave" class="input-control" placeholder="Ej: 1234 o Patrón Z">
+          </div>
+
+          <div class="campo-group">
+            <label for="falla">Falla Reportada / Trabajo a Realizar</label>
+            <textarea id="falla" class="input-control" placeholder="Ej: Cambio de pantalla y pin de carga" required></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          💾 Guardar Orden de Reparación
+        </button>
+
+        <div id="mensaje-respuesta" class="alerta-exito"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- VISTA 2: LISTA DE ÓRDENES GUARDADAS -->
+  <div id="vista-ordenes" class="seccion-vista">
+    <div class="cabecera-tabla">
+      <h2>📋 Lista de Órdenes Guardadas</h2>
+      <button class="btn-recargar" onclick="cargarOrdenes()">🔄 Actualizar</button>
+    </div>
+
+    <div class="tabla-contenedor">
+      <div id="lista-ordenes">Cargando órdenes...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Cambiar entre la vista de Registro y la de Órdenes
+  function cambiarVista(vista) {
+    const vistaRegistro = document.getElementById('vista-registro');
+    const vistaOrdenes = document.getElementById('vista-ordenes');
+    const botones = document.querySelectorAll('.btn-tab');
+
+    if (vista === 'registro') {
+      vistaRegistro.classList.add('activa');
+      vistaOrdenes.classList.remove('activa');
+      botones[0].classList.add('activo');
+      botones[1].classList.remove('activo');
+    } else {
+      vistaRegistro.classList.remove('activa');
+      vistaOrdenes.classList.add('activa');
+      botones[0].classList.remove('activo');
+      botones[1].classList.add('activo');
+      cargarOrdenes(); // Carga las órdenes al presionar el botón
+    }
+  }
+
+  // Guardar nueva orden (POST)
+  document.getElementById('form-orden').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const datos = {
+      nombre: document.getElementById('nombre').value,
+      telefono: document.getElementById('telefono').value,
+      modelo: document.getElementById('modelo').value,
+      imei: document.getElementById('imei').value,
+      clave: document.getElementById('clave').value,
+      falla: document.getElementById('falla').value
+    };
+
+    try {
+      const res = await fetch('/api/ordenes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await res.json();
+      const msgDiv = document.getElementById('mensaje-respuesta');
+
+      if (res.ok) {
+        msgDiv.style.display = 'block';
+        msgDiv.innerText = `✅ Orden registrada con éxito. ID de Orden: #${data.ordenId}`;
+        document.getElementById('form-orden').reset();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de conexión con el servidor.');
+    }
+  });
+
+  // Consultar órdenes guardadas (GET)
+  async function cargarOrdenes() {
+    try {
+      const respuesta = await fetch('/api/ordenes');
+      const ordenes = await respuesta.json();
+
+      const contenedor = document.getElementById('lista-ordenes');
+      if (!contenedor) return;
+
+      if (ordenes.length === 0) {
+        contenedor.innerHTML = '<p style="padding: 20px; text-align: center; color: #64748b;">No hay órdenes registradas aún.</p>';
+        return;
+      }
+
+      let html = `
+        <table class="tabla-ordenes">
+          <thead>
+            <tr>
+              <th># Orden</th>
+              <th>Cliente</th>
+              <th>Teléfono</th>
+              <th>Modelo</th>
+              <th>Falla Reportada</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      ordenes.forEach(o => {
+        html += `
+          <tr>
+            <td class="id-orden">#${o.id}</td>
+            <td><strong>${o.cliente}</strong></td>
+            <td>${o.telefono}</td>
+            <td>${o.modelo}</td>
+            <td>${o.falla_reportada}</td>
+            <td><span class="badge-estado">${o.estado}</span></td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      contenedor.innerHTML = html;
+    } catch (error) {
+      console.error('Error al cargar órdenes:', error);
+    }
+  }
+</script>
+
+</body>
+</html>
