@@ -187,6 +187,10 @@
             <input type="tel" id="telefono" required placeholder="Ej: 987654321">
           </div>
           <div class="form-group">
+            <label for="dni">DNI del Cliente</label>
+            <input type="text" id="dni" required placeholder="Ej: 71234567">
+          </div>
+          <div class="form-group">
             <label for="modelo">Modelo</label>
             <input type="text" id="modelo" required placeholder="Ej: Samsung A52">
           </div>
@@ -242,6 +246,7 @@
 
       const datosOrden = {
         nombre: document.getElementById('cliente').value,
+        dni: document.getElementById('dni').value,
         telefono: document.getElementById('telefono').value,
         modelo: document.getElementById('modelo').value,
         reparacion: document.getElementById('equipo').value,
@@ -258,23 +263,14 @@
           body: JSON.stringify(datosOrden)
         });
 
-        if (!respuesta.ok) {
-          throw new Error('Error al guardar la orden.');
+        if (respuesta.ok) {
+          document.getElementById('form-orden').reset();
+          cargarOrdenes();
+        } else {
+          alert('Error al guardar la orden.');
         }
-
-        const datosServidor = await respuesta.json();
-        const ordenGuardada = {
-          id: datosServidor.ordenId || contadorOrden++,
-          ...datosOrden
-        };
-
-        agregarFilaOrden(ordenGuardada);
-        document.getElementById('form-orden').reset();
-        const botonActivo = document.querySelector('.btn-filtro.activo');
-        filtrarEstado(filtroActual, botonActivo);
       } catch (error) {
         console.error('Error de conexión:', error);
-        alert('No se pudo conectar con el servidor o guardar la orden.');
       }
     }
 

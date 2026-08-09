@@ -36,31 +36,28 @@ app.get('/api/ordenes', async (req, res) => {
 
 // POST: Guardar Cliente y Orden de Servicio
 app.post('/api/ordenes', async (req, res) => {
-  // Acepta tanto los campos detallados como los enviados por el formulario básico
-  const { nombre, telefono, modelo, imei, clave, falla, reparacion, estado } = req.body;
+  const { nombre, dni, telefono, modelo, imei, clave, falla, reparacion, estado } = req.body;
 
   const fallaReportada = falla || reparacion || 'Sin especificación';
   const estadoOrden = estado || 'Ingresado';
   const imeiValor = imei || 'N/A';
   const claveValor = clave || 'N/A';
+  const dniValor = dni || 'N/A';
 
   try {
-    // 0. Crear el registro base del taller (ID = 1)
     await pool.query(
       `INSERT INTO talleres (id, nombre_taller) 
        VALUES (1, 'Taller Principal') 
        ON CONFLICT (id) DO NOTHING`
     );
 
-    // 1. Insertar el cliente
     const clienteRes = await pool.query(
-      `INSERT INTO clientes (taller_id, nombre, telefono) 
-       VALUES ($1, $2, $3) RETURNING id`,
-      [1, nombre, telefono]
+      `INSERT INTO clientes (taller_id, nombre, dni, telefono) 
+       VALUES ($1, $2, $3, $4) RETURNING id`,
+      [1, nombre, dniValor, telefono]
     );
     const clienteId = clienteRes.rows[0].id;
 
-    // 2. Insertar la orden de servicio
     const ordenRes = await pool.query(
       `INSERT INTO ordenes_servicio (taller_id, cliente_id, marca, modelo, imei, patron_pin, falla_reportada, estado) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
@@ -73,7 +70,6 @@ app.post('/api/ordenes', async (req, res) => {
       mensaje: 'Orden creada correctamente',
       ordenId: ordenId
     });
-
   } catch (err) {
     console.error('Error al guardar la orden:', err);
     res.status(500).json({ error: 'Error interno en la base de datos' });
