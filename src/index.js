@@ -139,13 +139,9 @@ app.post('/api/citas', async (req, res) => {
 app.post('/api/productos', async (req, res) => {
   const { nombre, precio, url_imagen } = req.body;
 
-  if (!nombre || !precio || !url_imagen) {
-    return res.status(400).json({ error: 'Nombre, precio y url_imagen son obligatorios.' });
-  }
-
   try {
     const resultado = await pool.query(
-      'INSERT INTO inventario (nombre, precio, url_imagen) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO inventario (nombre_repue, precio_venta, url_imagen) VALUES ($1, $2, $3) RETURNING *',
       [nombre, precio, url_imagen]
     );
     res.json({ success: true, producto: resultado.rows[0] });
@@ -159,9 +155,14 @@ app.post('/api/productos', async (req, res) => {
 app.get('/api/productos', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM inventario ORDER BY id DESC');
-    res.json(resultado.rows);
+    // Mapeamos para que el frontend los lea fácilmente sin cambiar tu HTML
+    const productosMapeados = resultado.rows.map(p => ({
+      ...p,
+      nombre: p.nombre_repue,
+      precio: p.precio_venta
+    }));
+    res.json(productosMapeados);
   } catch (err) {
-    console.error('Error al obtener productos:', err);
     res.status(500).json({ error: err.message });
   }
 });
