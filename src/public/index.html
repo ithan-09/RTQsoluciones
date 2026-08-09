@@ -660,7 +660,6 @@
 
           const resultado = await respuesta.json();
           if (respuesta.ok) {
-            alert('¡Imagen subida con éxito!');
             inputArchivo.value = '';
             cargarFotosOrden(ordenId);
           } else {
@@ -677,21 +676,59 @@
       };
     }
 
+    function mostrarGaleria(fotos) {
+      const contenedorGaleria = document.getElementById('contenedor-galeria');
+      if (!contenedorGaleria) return;
+      contenedorGaleria.innerHTML = '';
+
+      fotos.forEach(foto => {
+        contenedorGaleria.innerHTML += `
+          <div style="display: inline-block; margin: 5px; cursor: pointer;">
+            <img src="${foto.url}" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;"
+                 onclick="abrirImagenGrande('${foto.url}')" 
+                 title="Haz clic para ver más grande">
+          </div>
+        `;
+      });
+    }
+
+    function abrirImagenGrande(urlImagen) {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); display: flex; justify-content: center;
+        align-items: center; z-index: 9999; cursor: pointer;
+      `;
+      
+      modal.innerHTML = `
+        <div style="position: relative; max-width: 90%; max-height: 90%;">
+          <img src="${urlImagen}" style="width: 100%; height: auto; max-height: 85vh; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+          <p style="color: white; text-align: center; margin-top: 10px; font-family: sans-serif;">Haz clic en cualquier parte para cerrar</p>
+        </div>
+      `;
+
+      modal.onclick = () => {
+        document.body.removeChild(modal);
+      };
+
+      document.body.appendChild(modal);
+    }
+
     async function cargarFotosOrden(id) {
-      const galeria = document.getElementById('galeria-fotos');
+      const galeria = document.getElementById('contenedor-galeria');
       galeria.innerHTML = 'Cargando fotos...';
       try {
         const respuesta = await fetch(`/api/ordenes/${id}/fotos`);
         if (respuesta.ok) {
           const fotos = await respuesta.json();
-          galeria.innerHTML = '';
           if (fotos.length === 0) {
             galeria.innerHTML = '<p style="color: #666; font-size: 13px;">No hay fotos registradas de este equipo.</p>';
             return;
           }
-          fotos.forEach(f => {
-            galeria.innerHTML += `<img src="${f.url}" style="width: 90px; height: 90px; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;">`;
-          });
+          mostrarGaleria(fotos);
+        } else {
+          galeria.innerHTML = '<p style="color: red; font-size: 13px;">Error al cargar imágenes.</p>';
         }
       } catch (error) {
         galeria.innerHTML = '<p style="color: red; font-size: 13px;">Error al cargar imágenes.</p>';
@@ -958,8 +995,8 @@
         <button type="submit" style="background: #28a745; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%;">Subir Imagen a la Base de Datos</button>
       </form>
 
-      <h4 style="margin-top: 20px;">Galeria de Fotos del Dispositivo:</h4>
-      <div id="galeria-fotos" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+      <h4 style="margin-top: 20px;">Galería de Fotos del Dispositivo:</h4>
+      <div id="contenedor-galeria" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
         <!-- Imágenes subidas previamente -->
       </div>
 
