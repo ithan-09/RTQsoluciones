@@ -166,81 +166,602 @@
     .btn-cambiar:hover {
       background-color: #138496;
     }
+
+    .navbar-principal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      background: #0d6efd;
+      color: #ffffff;
+      border-radius: 0 0 12px 12px;
+      margin-bottom: 20px;
+    }
+
+    .navbar-principal .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .navbar-principal nav {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.65);
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateY(-1px);
+    }
+
+    .vista-seccion {
+      margin-bottom: 30px;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+      color: #ffffff;
+      padding: 28px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(13,110,253,0.18);
+      margin-bottom: 24px;
+    }
+
+    .hero-banner h1 {
+      font-size: 2rem;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-banner p {
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    .accesos-directos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .card-acceso {
+      background: #ffffff;
+      border: 1px solid #e3e8ef;
+      border-radius: 14px;
+      padding: 22px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-align: center;
+    }
+
+    .card-acceso:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(10, 29, 75, 0.08);
+    }
+
+    .acceso-icono {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .btn-cita {
+      background-color: #fd7e14;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .btn-cita:hover {
+      background-color: #e86c0f;
+    }
+
+    .grid-productos {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 20px;
+    }
+
+    .card-producto {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card-producto:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.08);
+    }
+
+    .card-producto img {
+      max-width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-contenido {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+      padding: 26px;
+      position: relative;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    .modal-cerrar {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #495057;
+    }
+
+    @media (max-width: 720px) {
+      .navbar-principal {
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>RTQ Soluciones - Taller de Reparaciones</h1>
+  <header class="navbar-principal">
+    <div class="logo">RTQ Soluciones</div>
+    <nav>
+      <button onclick="mostrarSeccion('home')" class="nav-btn">Inicio</button>
+      <button onclick="mostrarSeccion('taller')" class="nav-btn">Taller de Reparaciones</button>
+      <button onclick="mostrarSeccion('tienda')" class="nav-btn">Tienda / Productos</button>
+    </nav>
+  </header>
 
-    <!-- Formulario para Nueva Orden -->
-    <div class="form-container">
-      <h2>Registrar Nueva Orden</h2>
-      <form id="form-orden" onsubmit="agregarOrden(event)">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="cliente">Nombre del Cliente</label>
-            <input type="text" id="cliente" required placeholder="Ej: Juan Pérez">
-          </div>
-          <div class="form-group">
-            <label for="telefono">Número de Teléfono</label>
-            <input type="tel" id="telefono" required placeholder="Ej: 987654321">
-          </div>
-          <div class="form-group">
-            <label for="dni">DNI del Cliente</label>
-            <input type="text" id="dni" required placeholder="Ej: 71234567">
-          </div>
-          <div class="form-group">
-            <label for="modelo">Modelo</label>
-            <input type="text" id="modelo" required placeholder="Ej: Samsung A52">
-          </div>
-          <div class="form-group">
-            <label for="equipo">Reparación / Detalles</label>
-            <input type="text" id="equipo" required placeholder="Ej: Cambio de Pantalla">
-          </div>
-          <div class="form-group">
-            <label for="estado">Estado Inicial</label>
-            <select id="estado">
-              <option value="en proceso">En proceso</option>
-              <option value="entregado">Entregado</option>
-            </select>
-          </div>
+  <div class="container">
+    <section id="seccion-home" class="vista-seccion">
+      <div class="hero-banner">
+        <h1>Encuentra todo lo necesario para tu servicio técnico y tecnología</h1>
+        <p>¡Soluciones rápidas y profesionales para tus dispositivos!</p>
+      </div>
+      <div class="accesos-directos">
+        <div class="card-acceso" onclick="mostrarSeccion('taller')">
+          <div class="acceso-icono">🔧</div>
+          <h3>Taller de Reparaciones</h3>
+          <p>Registra equipos, revisa el historial y agenda tus citas técnicas.</p>
         </div>
-        <button type="submit" class="btn-guardar">Agregar Orden</button>
+        <div class="card-acceso" onclick="mostrarSeccion('tienda')">
+          <div class="acceso-icono">🏬</div>
+          <h3>Tienda y Catálogo</h3>
+          <p>Sube imágenes de productos, accesorios y repuestos a la base de datos.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="seccion-taller" class="vista-seccion" style="display:none;">
+      <h2>Panel de Taller de Reparaciones</h2>
+
+      <div class="form-container">
+        <h3>Registrar Nueva Orden</h3>
+        <form id="form-orden" onsubmit="agregarOrden(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="cliente">Nombre del Cliente</label>
+              <input type="text" id="cliente" required placeholder="Ej: Juan Pérez">
+            </div>
+            <div class="form-group">
+              <label for="telefono">Número de Teléfono</label>
+              <input type="tel" id="telefono" required placeholder="Ej: 987654321">
+            </div>
+            <div class="form-group">
+              <label for="dni">DNI del Cliente</label>
+              <input type="text" id="dni" required placeholder="Ej: 71234567">
+            </div>
+            <div class="form-group">
+              <label for="modelo">Modelo</label>
+              <input type="text" id="modelo" required placeholder="Ej: Samsung A52">
+            </div>
+            <div class="form-group">
+              <label for="equipo">Reparación / Detalles</label>
+              <input type="text" id="equipo" required placeholder="Ej: Cambio de Pantalla">
+            </div>
+            <div class="form-group">
+              <label for="estado">Estado Inicial</label>
+              <select id="estado">
+                <option value="en proceso">En proceso</option>
+                <option value="entregado">Entregado</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-guardar">Agregar Orden</button>
+        </form>
+      </div>
+
+      <div class="filtros-container">
+        <button class="btn-filtro activo" onclick="filtrarEstado('todos', this)">Todos</button>
+        <button class="btn-filtro" onclick="filtrarEstado('en proceso', this)">En proceso</button>
+        <button class="btn-filtro" onclick="filtrarEstado('entregado', this)">Entregados</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th># Orden</th>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th>Modelo</th>
+            <th>Reparación</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-ordenes">
+          <!-- Las filas se cargarán aquí dinámicamente -->
+        </tbody>
+      </table>
+    </section>
+
+    <section id="seccion-tienda" class="vista-seccion" style="display:none;">
+      <h2>Tienda, Productos y Servicios Técnicos</h2>
+      
+      <div class="contenedor-cita-btn" style="text-align: center; margin: 20px 0;">
+        <button onclick="abrirModalCitas()" class="btn-cita" style="background-color: #ff6600; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+          Solicitar una Cita de Servicio
+        </button>
+      </div>
+
+      <div class="subida-imagen-container" style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <h3>Subir Imagen de Producto / Repuesto</h3>
+        <form id="form-producto" enctype="multipart/form-data">
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label>Nombre del Producto:</label><br>
+            <input type="text" id="nombre-producto" required style="width: 100%; padding: 8px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label>Precio (S/):</label><br>
+            <input type="number" step="0.01" id="precio-producto" required style="width: 100%; padding: 8px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label>Imagen:</label><br>
+            <input type="file" id="imagen-producto" accept="image/*" required>
+          </div>
+          <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Subir a la Base de Datos</button>
+        </form>
+      </div>
+
+      <div id="catalogo-clientes" style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+        <!-- Se llenará automáticamente con JavaScript -->
+      </div>
+
+      <h3>Nuestros Servicios Especializados (Duración: 2 Horas)</h3>
+      <div class="grid-servicios" style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div class="card-servicio" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; width: 30%; min-width: 240px;">
+          <img src="ruta-imagen-revision.jpg" alt="Revisión General" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+          <h4>Revisión General</h4>
+          <p>Diagnóstico completo del dispositivo.</p>
+          <p><strong>Precio: S/ 30.00</strong></p>
+          <button onclick="seleccionarServicioCita('Revisión General', 30)" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Agendar Cita</button>
+        </div>
+
+        <div class="card-servicio" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; width: 30%; min-width: 240px;">
+          <img src="ruta-imagen-pantalla.jpg" alt="Cambio de Pantalla" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+          <h4>Cambio de Pantalla</h4>
+          <p>Sustitución de módulo de display y táctil.</p>
+          <p><strong>Precio: Variable según modelo</strong></p>
+          <button onclick="seleccionarServicioCita('Cambio de Pantalla', 0)" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Agendar Cita</button>
+        </div>
+
+        <div class="card-servicio" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; width: 30%; min-width: 240px;">
+          <img src="ruta-imagen-placa.jpg" alt="Reparación de Placas" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+          <h4>Reparación de Placas</h4>
+          <p>Solución a fallas de circuitería y energía.</p>
+          <p><strong>Precio: S/ 120.00</strong></p>
+          <button onclick="seleccionarServicioCita('Reparación de Placas', 120)" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Agendar Cita</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="modal-cita" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+    <div style="background: white; padding: 30px; border-radius: 8px; width: 400px; position: relative;">
+      <button style="position: absolute; top: 12px; right: 12px; border: none; background: transparent; font-size: 20px; cursor: pointer;" onclick="cerrarModalCitas()">×</button>
+      <h3>Reservar Cita de 2 Horas</h3>
+      <form id="form-cita-reserva" onsubmit="registrarCita(event)">
+        <p>Servicio seleccionado: <strong id="lbl-servicio-seleccionado">Ninguno</strong></p>
+        <div style="margin-bottom: 15px;">
+          <label>Selecciona el Día:</label><br>
+          <input type="date" id="fecha-cita" required style="width: 100%; padding: 8px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label>Hora de Inicio (Bloque de 2 horas):</label><br>
+          <select id="hora-cita" required style="width: 100%; padding: 8px;">
+            <option value="" disabled selected>Elige una hora...</option>
+            <option value="09:00">09:00 AM - 11:00 AM</option>
+            <option value="11:00">11:00 AM - 01:00 PM</option>
+            <option value="14:00">02:00 PM - 04:00 PM</option>
+            <option value="16:00">04:00 PM - 06:00 PM</option>
+          </select>
+        </div>
+        <button type="submit" style="background: #ff6600; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%;">Confirmar Cita</button>
+        <button type="button" onclick="cerrarModalCitas()" style="background: #ccc; border: none; padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px;">Cancelar</button>
       </form>
     </div>
-
-    <!-- Barra de Filtros -->
-    <div class="filtros-container">
-      <button class="btn-filtro activo" onclick="filtrarEstado('todos', this)">Todos</button>
-      <button class="btn-filtro" onclick="filtrarEstado('en proceso', this)">En proceso</button>
-      <button class="btn-filtro" onclick="filtrarEstado('entregado', this)">Entregados</button>
-    </div>
-
-    <!-- Tabla de Registros -->
-    <table>
-      <thead>
-        <tr>
-          <th># Orden</th>
-          <th>Cliente</th>
-          <th>Teléfono</th>
-          <th>Modelo</th>
-          <th>Reparación</th>
-          <th>Estado</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-ordenes">
-        <!-- Las filas se cargarán aquí dinámicamente -->
-      </tbody>
-    </table>
   </div>
 
   <script>
     let contadorOrden = 1;
     let filtroActual = 'todos';
+    let productosTienda = JSON.parse(localStorage.getItem('productosTienda') || '[]');
 
-    // Función modificada para conectar con tu API y guardar en la base de datos
+    function mostrarSeccion(seccion) {
+      document.getElementById('seccion-home').style.display = 'none';
+      document.getElementById('seccion-taller').style.display = 'none';
+      document.getElementById('seccion-tienda').style.display = 'none';
+
+      if (seccion === 'home') {
+        document.getElementById('seccion-home').style.display = 'block';
+      } else if (seccion === 'taller') {
+        document.getElementById('seccion-taller').style.display = 'block';
+      } else if (seccion === 'tienda') {
+        document.getElementById('seccion-tienda').style.display = 'block';
+        cargarProductosTienda();
+      }
+    }
+
+    let servicioActual = '';
+
+    function abrirModalCitas() {
+      document.getElementById('modal-cita').style.display = 'flex';
+    }
+
+    function cerrarModalCitas() {
+      document.getElementById('modal-cita').style.display = 'none';
+      document.getElementById('form-cita-reserva').reset();
+      document.getElementById('lbl-servicio-seleccionado').innerText = 'Ninguno';
+      servicioActual = '';
+    }
+
+    function seleccionarServicioCita(nombreServicio, precio) {
+      servicioActual = nombreServicio;
+      document.getElementById('lbl-servicio-seleccionado').innerText = nombreServicio;
+      alert(`Has seleccionado: ${nombreServicio}. Haz clic en continuar para elegir tu horario.`);
+      abrirModalCitas();
+    }
+
+    async function registrarCita(event) {
+      event.preventDefault();
+      const fecha = document.getElementById('fecha-cita').value;
+      const horaInicio = document.getElementById('hora-cita').value;
+
+      if (!servicioActual) {
+        alert('Selecciona primero un servicio antes de reservar la cita.');
+        return;
+      }
+
+      const datosCita = {
+        servicio: servicioActual,
+        nombre_cliente: 'Cliente en tienda',
+        telefono: '000000000',
+        fecha_cita: fecha,
+        hora_inicio: horaInicio
+      };
+
+      try {
+        const respuesta = await fetch('/api/citas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datosCita)
+        });
+
+        const resultado = await respuesta.json();
+        if (respuesta.ok) {
+          alert('¡Cita registrada con éxito! El bloque de 2 horas ha sido reservado.');
+          cerrarModalCitas();
+        } else {
+          alert(resultado.error || 'Este horario ya está ocupado. Por favor, selecciona otro.');
+        }
+      } catch (error) {
+        console.error('Error al registrar la cita:', error);
+      }
+    }
+
+    let ordenIdSeleccionada = null;
+
+    async function verDetallesOrden(id) {
+      ordenIdSeleccionada = id;
+      document.getElementById('detalle-orden-id').value = id;
+
+      try {
+        const respuesta = await fetch(`/api/ordenes/${id}`);
+        if (respuesta.ok) {
+          const data = await respuesta.json();
+          document.getElementById('contenido-detalles').innerHTML = `
+            <p><strong>Nº Orden:</strong> #${String(data.id).padStart(3, '0')}</p>
+            <p><strong>Cliente:</strong> ${data.cliente}</p>
+            <p><strong>Teléfono:</strong> ${data.telefono}</p>
+            <p><strong>DNI / Cédula:</strong> ${data.dni_cedula || 'N/A'}</p>
+            <p><strong>Modelo:</strong> ${data.modelo}</p>
+            <p><strong>Falla Reportada:</strong> ${data.falla_reportada}</p>
+            <p><strong>Estado:</strong> ${data.estado}</p>
+          `;
+
+          cargarFotosOrden(id);
+          document.getElementById('modal-detalles').style.display = 'flex';
+        }
+      } catch (error) {
+        console.error('Error al cargar detalles:', error);
+      }
+    }
+
+    function cerrarModalDetalles() {
+      document.getElementById('modal-detalles').style.display = 'none';
+    }
+
+    async function subirFotoEstado(event) {
+      event.preventDefault();
+      const inputArchivo = document.getElementById('foto-estado');
+      const formData = new FormData();
+      formData.append('foto', inputArchivo.files[0]);
+
+      try {
+        const respuesta = await fetch(`/api/ordenes/${ordenIdSeleccionada}/fotos`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (respuesta.ok) {
+          alert('Foto subida exitosamente');
+          inputArchivo.value = '';
+          cargarFotosOrden(ordenIdSeleccionada);
+        } else {
+          alert('Error al subir la imagen');
+        }
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    }
+
+    async function cargarFotosOrden(id) {
+      const galeria = document.getElementById('galeria-fotos');
+      galeria.innerHTML = 'Cargando fotos...';
+      try {
+        const respuesta = await fetch(`/api/ordenes/${id}/fotos`);
+        if (respuesta.ok) {
+          const fotos = await respuesta.json();
+          galeria.innerHTML = '';
+          if (fotos.length === 0) {
+            galeria.innerHTML = '<p style="color: #666; font-size: 13px;">No hay fotos registradas de este equipo.</p>';
+            return;
+          }
+          fotos.forEach(f => {
+            galeria.innerHTML += `<img src="${f.url}" style="width: 90px; height: 90px; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;">`;
+          });
+        }
+      } catch (error) {
+        galeria.innerHTML = '<p style="color: red; font-size: 13px;">Error al cargar imágenes.</p>';
+      }
+    }
+
+    function cargarProductosTienda() {
+      const catalogo = document.getElementById('catalogo-tienda');
+      catalogo.innerHTML = '';
+
+      if (!productosTienda.length) {
+        catalogo.innerHTML = '<p>No hay productos cargados aún. Agrega tu primer producto.</p>';
+        return;
+      }
+
+      productosTienda.forEach(producto => {
+        const card = document.createElement('div');
+        card.className = 'card-producto';
+        card.innerHTML = `
+          <img src="${producto.imagen}" alt="${producto.nombre}">
+          <h4>${producto.nombre}</h4>
+          <p>Precio S/ ${producto.precio}</p>
+        `;
+        catalogo.appendChild(card);
+      });
+    }
+
+    async function cargarCatalogoClientes() {
+      const contenedor = document.getElementById('catalogo-clientes');
+      if (!contenedor) return;
+      contenedor.innerHTML = '<p>Cargando productos...</p>';
+
+      try {
+        const respuesta = await fetch('/api/productos');
+        if (respuesta.ok) {
+          const productos = await respuesta.json();
+          contenedor.innerHTML = '';
+
+          if (productos.length === 0) {
+            contenedor.innerHTML = '<p>No hay productos disponibles por el momento.</p>';
+            return;
+          }
+
+          productos.forEach(prod => {
+            contenedor.innerHTML += `
+              <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; width: 220px; background: white;">
+                <img src="${prod.url_imagen}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+                <h4 style="margin: 10px 0 5px 0;">${prod.nombre}</h4>
+                <p style="color: #28a745; font-weight: bold; margin: 0;">Precio: S/ ${prod.precio}</p>
+              </div>
+            `;
+          });
+        } else {
+          contenedor.innerHTML = '<p style="color: red;">Error al cargar el catálogo.</p>';
+        }
+      } catch (error) {
+        contenedor.innerHTML = '<p style="color: red;">Error al cargar el catálogo.</p>';
+      }
+    }
+
+    cargarCatalogoClientes();
+
+    document.getElementById('form-producto').onsubmit = async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData();
+      formData.append('nombre', document.getElementById('nombre-producto').value);
+      formData.append('precio', document.getElementById('precio-producto').value);
+      formData.append('imagen', document.getElementById('imagen-producto').files[0]);
+
+      try {
+        const res = await fetch('/api/productos', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (res.ok) {
+          alert('¡Producto subido con éxito!');
+          document.getElementById('form-producto').reset();
+        } else {
+          const error = await res.text();
+          alert('Error al subir producto: ' + error);
+        }
+      } catch (error) {
+        console.error('Error al subir el producto:', error);
+        alert('Error de conexión al subir el producto.');
+      }
+    };
+
     async function agregarOrden(event) {
       event.preventDefault();
 
@@ -266,6 +787,7 @@
         if (respuesta.ok) {
           document.getElementById('form-orden').reset();
           cargarOrdenes();
+          mostrarSeccion('taller');
         } else {
           alert('Error al guardar la orden.');
         }
@@ -314,8 +836,8 @@
             const badgeClase = esProceso ? 'badge-proceso' : 'badge-entregado';
 
             nuevaFila.innerHTML = `
-              <td>#${String(orden.id).padStart(3, '0')}</td>
-              <td>${orden.cliente}</td>
+              <td><a href="#" onclick="verDetallesOrden(${orden.id}); return false;">#${String(orden.id).padStart(3, '0')}</a></td>
+              <td onclick="verDetallesOrden(${orden.id})" style="cursor: pointer; color: #007bff; text-decoration: underline;">${orden.cliente}</td>
               <td>${orden.telefono}</td>
               <td>${orden.modelo}</td>
               <td>${orden.falla_reportada}</td>
@@ -373,8 +895,7 @@
         celdaEstado.innerHTML = '<span class="badge badge-proceso">En proceso</span>';
       }
 
-      const botonActivo = document.querySelector('.btn-filtro.activo');
-      filtrarEstado(filtroActual, botonActivo);
+      filtrarEstado(filtroActual, document.querySelector('.btn-filtro.activo'));
     }
 
     function filtrarEstado(estado, botonSeleccionado) {
@@ -392,9 +913,39 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      mostrarSeccion('home');
       cargarOrdenes();
+      cargarProductosTienda();
     });
   </script>
 
+  <!-- VENTANA MODAL DE DETALLES Y FOTOS DEL ESTADO DEL TELÉFONO -->
+  <div id="modal-detalles" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+    <div style="background: white; padding: 30px; border-radius: 10px; width: 500px; max-height: 90vh; overflow-y: auto; position: relative;">
+      <h3>Detalles del Cliente y Orden</h3>
+      <div id="contenido-detalles" style="margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 5px;">
+        <!-- Datos cargados dinámicamente -->
+      </div>
+
+      <hr style="margin: 20px 0;">
+
+      <h3>Subir Foto del Estado del Teléfono</h3>
+      <form id="form-subir-foto" onsubmit="subirFotoEstado(event)">
+        <input type="hidden" id="detalle-orden-id">
+        <div style="margin-bottom: 15px;">
+          <label>Seleccionar imagen (pantalla, chasis, golpes):</label><br>
+          <input type="file" id="foto-estado" accept="image/*" required style="width: 100%; margin-top: 5px;">
+        </div>
+        <button type="submit" style="background: #28a745; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%;">Subir Imagen a la Base de Datos</button>
+      </form>
+
+      <h4 style="margin-top: 20px;">Galeria de Fotos del Dispositivo:</h4>
+      <div id="galeria-fotos" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+        <!-- Imágenes subidas previamente -->
+      </div>
+
+      <button type="button" onclick="cerrarModalDetalles()" style="background: #dc3545; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 20px;">Cerrar Ventana</button>
+    </div>
+  </div>
 </body>
 </html>
