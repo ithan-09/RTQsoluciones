@@ -19,7 +19,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1050px;
       margin: 0 auto;
       background: #ffffff;
       padding: 25px;
@@ -149,6 +149,23 @@
       background-color: #d4edda;
       color: #155724;
     }
+
+    /* Botón de Cambiar Estado */
+    .btn-cambiar {
+      padding: 6px 12px;
+      background-color: #17a2b8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .btn-cambiar:hover {
+      background-color: #138496;
+    }
   </style>
 </head>
 <body>
@@ -206,6 +223,7 @@
           <th>Modelo</th>
           <th>Reparación</th>
           <th>Estado</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody id="tabla-ordenes">
@@ -216,6 +234,7 @@
           <td>Samsung A52</td>
           <td>Cambio de pantalla</td>
           <td><span class="badge badge-proceso">En proceso</span></td>
+          <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
         </tr>
         <tr class="fila-orden" data-estado="en proceso">
           <td>#002</td>
@@ -224,13 +243,23 @@
           <td>Redmi Note 10</td>
           <td>Cambio de pantalla</td>
           <td><span class="badge badge-proceso">En proceso</span></td>
+          <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
+        </tr>
+        <tr class="fila-orden" data-estado="entregado">
+          <td>#003</td>
+          <td>rafin</td>
+          <td>936425484</td>
+          <td>a12</td>
+          <td>Cambio de pin de carga</td>
+          <td><span class="badge badge-entregado">Entregado</span></td>
+          <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <script>
-    let contadorOrden = 3;
+    let contadorOrden = 4;
     let filtroActual = 'todos';
 
     function agregarOrden(event) {
@@ -259,6 +288,7 @@
         <td>${modelo}</td>
         <td>${equipo}</td>
         <td><span class="badge ${badgeClase}">${estadoTexto}</span></td>
+        <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
       `;
 
       tabla.appendChild(nuevaFila);
@@ -266,7 +296,26 @@
       // Limpiar formulario
       document.getElementById('form-orden').reset();
 
-      // Mantener el filtro seleccionado actualmente
+      // Mantener filtro activo
+      const botonActivo = document.querySelector('.btn-filtro.activo');
+      filtrarEstado(filtroActual, botonActivo);
+    }
+
+    // Función para cambiar de 'En proceso' a 'Entregado' y viceversa
+    function cambiarEstado(boton) {
+      const fila = boton.closest('tr');
+      const estadoActual = fila.getAttribute('data-estado');
+      const celdaEstado = fila.children[5]; // Celda con la etiqueta
+
+      if (estadoActual === 'en proceso') {
+        fila.setAttribute('data-estado', 'entregado');
+        celdaEstado.innerHTML = '<span class="badge badge-entregado">Entregado</span>';
+      } else {
+        fila.setAttribute('data-estado', 'en proceso');
+        celdaEstado.innerHTML = '<span class="badge badge-proceso">En proceso</span>';
+      }
+
+      // Reaplicar filtro actual para ocultar/mostrar si es necesario
       const botonActivo = document.querySelector('.btn-filtro.activo');
       filtrarEstado(filtroActual, botonActivo);
     }
