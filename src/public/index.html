@@ -793,7 +793,7 @@
 
     cargarProductosHaciaAbajo();
 
-    document.getElementById('form-producto').onsubmit = function (e) {
+    document.getElementById('form-producto')?.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const nombre = document.getElementById('nombre-producto').value;
@@ -824,19 +824,22 @@
             document.getElementById('form-producto').reset();
             if (typeof cargarProductosHaciaAbajo === 'function') cargarProductosHaciaAbajo();
           } else {
-            console.error('Error al subir producto:', data.error || 'Error desconocido');
-            // Opcional: mostrar un mensaje amigable en la UI en vez de un alert
-            // document.getElementById('error-producto').innerText = 'Hubo un error al guardar el producto.';
+            // AQUÍ ESTÁ EL SECRETO: Muestra exactamente qué falló del servidor
+            alert('Error del servidor: ' + (data.error || 'Desconocido'));
+            // También lo registramos en consola para depuración
+            console.error('Error al subir producto:', data);
           }
         } catch (error) {
-          alert('Error de conexión al guardar el producto');
+          // Mensaje de red más detallado
+          alert('Error de red al intentar conectar con el servidor: ' + (error.message || error));
+          console.error('Fetch error:', error);
         }
       };
 
       reader.onerror = function () {
         alert('No se pudo leer el archivo. Intenta con otra imagen.');
       };
-    };
+    });
 
     async function agregarOrden(event) {
       event.preventDefault();
