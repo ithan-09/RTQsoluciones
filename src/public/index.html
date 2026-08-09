@@ -637,25 +637,44 @@
     async function subirFotoEstado(event) {
       event.preventDefault();
       const inputArchivo = document.getElementById('foto-estado');
-      const formData = new FormData();
-      formData.append('foto', inputArchivo.files[0]);
+      const ordenId = document.getElementById('detalle-orden-id').value;
 
-      try {
-        const respuesta = await fetch(`/api/ordenes/${ordenIdSeleccionada}/fotos`, {
-          method: 'POST',
-          body: formData
-        });
-
-        if (respuesta.ok) {
-          alert('Foto subida exitosamente');
-          inputArchivo.value = '';
-          cargarFotosOrden(ordenIdSeleccionada);
-        } else {
-          alert('Error al subir la imagen');
-        }
-      } catch (error) {
-        console.error('Error de red:', error);
+      if (!inputArchivo.files.length) {
+        alert('Por favor selecciona una imagen');
+        return;
       }
+
+      const archivo = inputArchivo.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(archivo);
+
+      reader.onload = async function () {
+        const imagenBase64 = reader.result;
+
+        try {
+          const respuesta = await fetch('/api/orden-fotos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orden_id: ordenId, imagen_base64: imagenBase64 })
+          });
+
+          const resultado = await respuesta.json();
+          if (respuesta.ok) {
+            alert('¡Imagen subida con éxito!');
+            inputArchivo.value = '';
+            cargarFotosOrden(ordenId);
+          } else {
+            alert('Error: ' + (resultado.error || 'No se pudo subir la imagen'));
+          }
+        } catch (error) {
+          console.error('Error al subir la imagen:', error);
+          alert('Error de conexión al subir la imagen');
+        }
+      };
+
+      reader.onerror = function () {
+        alert('No se pudo leer el archivo. Intenta con otra imagen.');
+      };
     }
 
     async function cargarFotosOrden(id) {

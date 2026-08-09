@@ -13,7 +13,8 @@ const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.static('src/public'));
 app.use('/uploads', express.static('uploads'));
 
@@ -163,6 +164,26 @@ app.get('/api/productos', async (req, res) => {
   } catch (err) {
     console.error('Error al obtener el inventario:', err);
     res.status(500).json({ error: 'Error al obtener el inventario' });
+  }
+});
+
+// Ruta para subir la foto del teléfono como Base64 a la tabla orden_fotos
+app.post('/api/orden-fotos', async (req, res) => {
+  const { orden_id, imagen_base64 } = req.body;
+
+  if (!orden_id || !imagen_base64) {
+    return res.status(400).json({ error: 'orden_id e imagen_base64 son obligatorios.' });
+  }
+
+  try {
+    const resultado = await pool.query(
+      'INSERT INTO orden_fotos (orden_id, url) VALUES ($1, $2) RETURNING *',
+      [orden_id, imagen_base64]
+    );
+    res.json({ success: true, foto: resultado.rows[0] });
+  } catch (err) {
+    console.error('Error al guardar la imagen en la base de datos:', err);
+    res.status(500).json({ error: 'Error al guardar la imagen en la base de datos' });
   }
 });
 
