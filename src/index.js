@@ -52,7 +52,7 @@ app.post('/api/ordenes', async (req, res) => {
     );
 
     const clienteRes = await pool.query(
-      `INSERT INTO clientes (taller_id, nombre, dni, telefono) 
+      `INSERT INTO clientes (taller_id, nombre, dni_cedula, telefono) 
        VALUES ($1, $2, $3, $4) RETURNING id`,
       [1, nombre, dniValor, telefono]
     );
