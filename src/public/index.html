@@ -250,7 +250,7 @@
       };
 
       try {
-        const respuesta = await fetch('https://rtqsoluciones.onrender.com/api/ordenes', {
+        const respuesta = await fetch('/api/ordenes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -258,33 +258,80 @@
           body: JSON.stringify(datosOrden)
         });
 
+        if (!respuesta.ok) {
+          throw new Error('Error al guardar la orden.');
+        }
+
+        const datosServidor = await respuesta.json();
+        const ordenGuardada = {
+          id: datosServidor.ordenId || contadorOrden++,
+          ...datosOrden
+        };
+
+        agregarFilaOrden(ordenGuardada);
+        document.getElementById('form-orden').reset();
+        const botonActivo = document.querySelector('.btn-filtro.activo');
+        filtrarEstado(filtroActual, botonActivo);
+      } catch (error) {
+        console.error('Error de conexión:', error);
+        alert('No se pudo conectar con el servidor o guardar la orden.');
+      }
+    }
+
+    function agregarFilaOrden(orden) {
+      const tabla = document.getElementById('tabla-ordenes');
+      const nuevaFila = document.createElement('tr');
+      nuevaFila.className = 'fila-orden';
+      nuevaFila.setAttribute('data-estado', orden.estado);
+
+      const esProceso = orden.estado === 'en proceso';
+      const badgeClase = esProceso ? 'badge-proceso' : 'badge-entregado';
+      const estadoTexto = esProceso ? 'En proceso' : 'Entregado';
+
+      nuevaFila.innerHTML = `
+        <td>#${orden.id}</td>
+        <td>${orden.nombre}</td>
+        <td>${orden.telefono}</td>
+        <td>${orden.modelo}</td>
+        <td>${orden.reparacion || orden.falla || ''}</td>
+        <td><span class="badge ${badgeClase}">${estadoTexto}</span></td>
+        <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
+      `;
+
+      tabla.appendChild(nuevaFila);
+    }
+
+    async function cargarOrdenes() {
+      try {
+        const respuesta = await fetch('/api/ordenes');
         if (respuesta.ok) {
-          const datosServidor = await respuesta.json();
-          
+          const ordenes = await respuesta.json();
           const tabla = document.getElementById('tabla-ordenes');
-          const nuevaFila = document.createElement('tr');
-          nuevaFila.className = 'fila-orden';
-          nuevaFila.setAttribute('data-estado', datosOrden.estado);
+          tabla.innerHTML = '';
 
-          const esProceso = datosOrden.estado === 'en proceso';
-          const badgeClase = esProceso ? 'badge-proceso' : 'badge-entregado';
-          const estadoTexto = esProceso ? 'En proceso' : 'Entregado';
+          ordenes.forEach(orden => {
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.className = 'fila-orden';
+            nuevaFila.setAttribute('data-estado', orden.estado);
 
-          nuevaFila.innerHTML = `
-            <td>#${datosServidor.ordenId || contadorOrden++}</td>
-            <td>${datosOrden.nombre}</td>
-            <td>${datosOrden.telefono}</td>
-            <td>${datosOrden.modelo}</td>
-            <td>${datosOrden.reparacion}</td>
-            <td><span class="badge ${badgeClase}">${estadoTexto}</span></td>
-            <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
-          `;
+            const esProceso = orden.estado === 'en proceso' || orden.estado === 'Ingresado';
+            const badgeClase = esProceso ? 'badge-proceso' : 'badge-entregado';
 
-          tabla.insertBefore(nuevaFila, tabla.firstChild);
-
-          document.getElementById('form-orden').reset();
-          const botonActivo = document.querySelector('.btn-filtro.activo');
-          filtrarEstado(filtroActual, botonActivo);
+            nuevaFila.innerHTML = `
+              <td>#${String(orden.id).padStart(3, '0')}</td>
+              <td>${orden.cliente}</td>
+              <td>${orden.telefono}</td>
+              <td>${orden.modelo}</td>
+              <td>${orden.falla_reportada}</td>
+              <td><span class="badge ${badgeClase}">${orden.estado}</span></td>
+              <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
+            `;
+            tabla.appendChild(nuevaFila);
+          });
+        }
+      } catch (error) {
+        console.error('Error al cargar las órdenes:', error);
+      }
     }
 
     function cambiarEstado(boton) {
@@ -312,17 +359,15 @@
       if (botonSeleccionado) botonSeleccionado.classList.add('activo');
 
       const filas = document.querySelectorAll('.fila-orden');
-
       filas.forEach(fila => {
         const estadoFila = fila.getAttribute('data-estado');
-
-        if (estado === 'todos' || estadoFila === estado) {
-          fila.style.display = '';
-        } else {
-          fila.style.display = 'none';
-        }
+        fila.style.display = estado === 'todos' || estadoFila === estado ? '' : 'none';
       });
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarOrdenes();
+    });
   </script>
 
 </body>
