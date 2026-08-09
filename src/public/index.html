@@ -19,7 +19,7 @@
     }
 
     .container {
-      max-width: 950px;
+      max-width: 1000px;
       margin: 0 auto;
       background: #ffffff;
       padding: 25px;
@@ -44,7 +44,7 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 15px;
       margin-bottom: 15px;
     }
@@ -170,8 +170,12 @@
             <input type="tel" id="telefono" required placeholder="Ej: 987654321">
           </div>
           <div class="form-group">
+            <label for="modelo">Modelo</label>
+            <input type="text" id="modelo" required placeholder="Ej: Samsung A52">
+          </div>
+          <div class="form-group">
             <label for="equipo">Reparación / Detalles</label>
-            <input type="text" id="equipo" required placeholder="Ej: Cambio de Pantalla Samsung A52">
+            <input type="text" id="equipo" required placeholder="Ej: Cambio de Pantalla">
           </div>
           <div class="form-group">
             <label for="estado">Estado Inicial</label>
@@ -199,6 +203,7 @@
           <th># Orden</th>
           <th>Cliente</th>
           <th>Teléfono</th>
+          <th>Modelo</th>
           <th>Reparación</th>
           <th>Estado</th>
         </tr>
@@ -208,15 +213,17 @@
           <td>#001</td>
           <td>Juan Pérez</td>
           <td>987654321</td>
-          <td>Cambio de pantalla Samsung A52</td>
+          <td>Samsung A52</td>
+          <td>Cambio de pantalla</td>
           <td><span class="badge badge-proceso">En proceso</span></td>
         </tr>
-        <tr class="fila-orden" data-estado="entregado">
+        <tr class="fila-orden" data-estado="en proceso">
           <td>#002</td>
-          <td>María López</td>
-          <td>912345678</td>
-          <td>Reparación pin de carga iPhone 11</td>
-          <td><span class="badge badge-entregado">Entregado</span></td>
+          <td>Nexon</td>
+          <td>936425484</td>
+          <td>Redmi Note 10</td>
+          <td>Cambio de pantalla</td>
+          <td><span class="badge badge-proceso">En proceso</span></td>
         </tr>
       </tbody>
     </table>
@@ -231,6 +238,7 @@
 
       const cliente = document.getElementById('cliente').value;
       const telefono = document.getElementById('telefono').value;
+      const modelo = document.getElementById('modelo').value;
       const equipo = document.getElementById('equipo').value;
       const estado = document.getElementById('estado').value;
 
@@ -248,13 +256,14 @@
         <td>${numOrden}</td>
         <td>${cliente}</td>
         <td>${telefono}</td>
+        <td>${modelo}</td>
         <td>${equipo}</td>
         <td><span class="badge ${badgeClase}">${estadoTexto}</span></td>
       `;
 
       tabla.appendChild(nuevaFila);
 
-      // Limpiar el formulario
+      // Limpiar formulario
       document.getElementById('form-orden').reset();
 
       // Mantener el filtro seleccionado actualmente
