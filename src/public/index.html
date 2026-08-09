@@ -227,85 +227,79 @@
         </tr>
       </thead>
       <tbody id="tabla-ordenes">
-        <tr class="fila-orden" data-estado="en proceso">
-          <td>#001</td>
-          <td>Juan Pérez</td>
-          <td>987654321</td>
-          <td>Samsung A52</td>
-          <td>Cambio de pantalla</td>
-          <td><span class="badge badge-proceso">En proceso</span></td>
-          <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
-        </tr>
-        <tr class="fila-orden" data-estado="en proceso">
-          <td>#002</td>
-          <td>Nexon</td>
-          <td>936425484</td>
-          <td>Redmi Note 10</td>
-          <td>Cambio de pantalla</td>
-          <td><span class="badge badge-proceso">En proceso</span></td>
-          <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
-        </tr>
-        <tr class="fila-orden" data-estado="entregado">
-          <td>#003</td>
-          <td>rafin</td>
-          <td>936425484</td>
-          <td>a12</td>
-          <td>Cambio de pin de carga</td>
-          <td><span class="badge badge-entregado">Entregado</span></td>
-          <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
-        </tr>
+        <!-- Las filas se cargarán aquí dinámicamente -->
       </tbody>
     </table>
   </div>
 
   <script>
-    let contadorOrden = 4;
+    let contadorOrden = 1;
     let filtroActual = 'todos';
 
-    function agregarOrden(event) {
+    // Función modificada para conectar con tu API y guardar en la base de datos
+    async function agregarOrden(event) {
       event.preventDefault();
 
-      const cliente = document.getElementById('cliente').value;
-      const telefono = document.getElementById('telefono').value;
-      const modelo = document.getElementById('modelo').value;
-      const equipo = document.getElementById('equipo').value;
-      const estado = document.getElementById('estado').value;
+      const datosOrden = {
+        nombre: document.getElementById('cliente').value,
+        telefono: document.getElementById('telefono').value,
+        modelo: document.getElementById('modelo').value,
+        reparacion: document.getElementById('equipo').value,
+        falla: document.getElementById('equipo').value,
+        estado: document.getElementById('estado').value
+      };
 
-      const numOrden = '#00' + contadorOrden++;
-      const esProceso = estado === 'en proceso';
-      const badgeClase = esProceso ? 'badge-proceso' : 'badge-entregado';
-      const estadoTexto = esProceso ? 'En proceso' : 'Entregado';
+      try {
+        const respuesta = await fetch('https://rtqsoluciones.onrender.com/api/ordenes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(datosOrden)
+        });
 
-      const tabla = document.getElementById('tabla-ordenes');
-      const nuevaFila = document.createElement('tr');
-      nuevaFila.className = 'fila-orden';
-      nuevaFila.setAttribute('data-estado', estado);
+        if (respuesta.ok) {
+          const datosServidor = await respuesta.json();
+          
+          const tabla = document.getElementById('tabla-ordenes');
+          const nuevaFila = document.createElement('tr');
+          nuevaFila.className = 'fila-orden';
+          nuevaFila.setAttribute('data-estado', datosOrden.estado);
 
-      nuevaFila.innerHTML = `
-        <td>${numOrden}</td>
-        <td>${cliente}</td>
-        <td>${telefono}</td>
-        <td>${modelo}</td>
-        <td>${equipo}</td>
-        <td><span class="badge ${badgeClase}">${estadoTexto}</span></td>
-        <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
-      `;
+          const esProceso = datosOrden.estado === 'en proceso';
+          const badgeClase = esProceso ? 'badge-proceso' : 'badge-entregado';
+          const estadoTexto = esProceso ? 'En proceso' : 'Entregado';
 
-      tabla.appendChild(nuevaFila);
+          nuevaFila.innerHTML = `
+            <td>#${datosServidor.ordenId || contadorOrden++}</td>
+            <td>${datosOrden.nombre}</td>
+            <td>${datosOrden.telefono}</td>
+            <td>${datosOrden.modelo}</td>
+            <td>${datosOrden.reparacion}</td>
+            <td><span class="badge ${badgeClase}">${estadoTexto}</span></td>
+            <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
+          `;
 
-      // Limpiar formulario
-      document.getElementById('form-orden').reset();
+          tabla.insertBefore(nuevaFila, tabla.firstChild);
 
-      // Mantener filtro activo
-      const botonActivo = document.querySelector('.btn-filtro.activo');
-      filtrarEstado(filtroActual, botonActivo);
+          document.getElementById('form-orden').reset();
+          const botonActivo = document.querySelector('.btn-filtro.activo');
+          filtrarEstado(filtroActual, botonActivo);
+          
+          alert('¡Orden y cliente guardados correctamente en la base de datos!');
+        } else {
+          alert('Error al guardar la orden.');
+        }
+      } catch (error) {
+        console.error('Error de conexión:', error);
+        alert('No se pudo conectar con el servidor.');
+      }
     }
 
-    // Función para cambiar de 'En proceso' a 'Entregado' y viceversa
     function cambiarEstado(boton) {
       const fila = boton.closest('tr');
       const estadoActual = fila.getAttribute('data-estado');
-      const celdaEstado = fila.children[5]; // Celda con la etiqueta
+      const celdaEstado = fila.children[5];
 
       if (estadoActual === 'en proceso') {
         fila.setAttribute('data-estado', 'entregado');
@@ -315,7 +309,6 @@
         celdaEstado.innerHTML = '<span class="badge badge-proceso">En proceso</span>';
       }
 
-      // Reaplicar filtro actual para ocultar/mostrar si es necesario
       const botonActivo = document.querySelector('.btn-filtro.activo');
       filtrarEstado(filtroActual, botonActivo);
     }
