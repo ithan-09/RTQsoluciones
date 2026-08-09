@@ -320,13 +320,43 @@
               <td>${orden.modelo}</td>
               <td>${orden.falla_reportada}</td>
               <td><span class="badge ${badgeClase}">${orden.estado}</span></td>
-              <td><button class="btn-cambiar" onclick="cambiarEstado(this)">Cambiar Estado</button></td>
+              <td>
+                <select class="select-estado" onchange="actualizarEstadoOrden(${orden.id}, this.value)">
+                  <option value="" disabled selected>Cambiar estado...</option>
+                  <option value="entregado">Entregado</option>
+                  <option value="en proceso">En proceso</option>
+                  <option value="no quedo">No quedó</option>
+                  <option value="pagado">Pagado</option>
+                  <option value="no pagado">No pagado</option>
+                  <option value="pendiente">Pendiente</option>
+                </select>
+              </td>
             `;
             tabla.appendChild(nuevaFila);
           });
         }
       } catch (error) {
         console.error('Error al cargar las órdenes:', error);
+      }
+    }
+
+    async function actualizarEstadoOrden(idOrden, nuevoEstado) {
+      try {
+        const respuesta = await fetch(`/api/ordenes/${idOrden}/estado`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ estado: nuevoEstado })
+        });
+
+        if (respuesta.ok) {
+          cargarOrdenes();
+        } else {
+          alert('No se pudo actualizar el estado.');
+        }
+      } catch (error) {
+        console.error('Error al actualizar el estado:', error);
       }
     }
 

@@ -76,6 +76,22 @@ app.post('/api/ordenes', async (req, res) => {
   }
 });
 
+app.put('/api/ordenes/:id/estado', async (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE ordenes_servicio SET estado = $1 WHERE id = $2`,
+      [estado, id]
+    );
+    res.json({ mensaje: 'Estado actualizado correctamente' });
+  } catch (err) {
+    console.error('Error al actualizar el estado en la BD:', err);
+    res.status(500).json({ error: 'Error al actualizar el estado' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
