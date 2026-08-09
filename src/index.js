@@ -145,7 +145,7 @@ app.post('/api/productos', async (req, res) => {
 
   try {
     const resultado = await pool.query(
-      'INSERT INTO inventario (nombre_repue, precio_venta, url_imagen) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO inventario (nombre, precio, url_imagen) VALUES ($1, $2, $3) RETURNING *',
       [nombre, precio, url_imagen]
     );
     res.json({ success: true, producto: resultado.rows[0] });
