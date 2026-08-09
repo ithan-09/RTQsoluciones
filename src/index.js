@@ -141,12 +141,12 @@ app.post('/api/productos', async (req, res) => {
 
   try {
     const resultado = await pool.query(
-      'INSERT INTO inventario (nombre_repue, precio_venta, url_imagen) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO inventario (nombre, precio, url_imagen) VALUES ($1, $2, $3) RETURNING *',
       [nombre, precio, url_imagen]
     );
     res.json({ success: true, producto: resultado.rows[0] });
   } catch (err) {
-    console.error('Error al guardar el producto:', err);
+    console.error('Error al guardar:', err);
     res.status(500).json({ error: err.message });
   }
 });
